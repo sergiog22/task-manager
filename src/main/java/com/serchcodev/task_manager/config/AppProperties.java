@@ -5,11 +5,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.List;
 
 @ConfigurationProperties(prefix = "app")
-public record AppProperties(Cors cors, Security security) {
+public record AppProperties(Cors cors, Jwt jwt) {
 
     public record Cors(List<String> allowedOrigins) {
     }
 
-    public record Security(String username, String password, List<String> roles) {
+    public record Jwt(String secret, long expirationMinutes) {
     }
 }
