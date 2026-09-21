@@ -4,6 +4,10 @@ on:
   push:
   pull_request:
 
+  permissions:
+  contents: read
+  packages: write
+  
 jobs:
   test-and-build:
     runs-on: ubuntu-latest
@@ -28,6 +32,6 @@ jobs:
       - run: ./mvnw verify
       - name: Build Docker image
         run: docker build --tag ghcr.io/sergiog22/task-manager:${{ github.sha }} .
-      
+
       - name: Push Docker image
         run: docker push ghcr.io/sergiog22/task-manager:${{ github.sha }}
