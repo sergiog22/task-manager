@@ -30,8 +30,13 @@ jobs:
 
       - run: chmod +x mvnw
       - run: ./mvnw verify
-      - name: Build Docker image
-        run: docker build --tag ghcr.io/sergiog22/task-manager:${{ github.sha }} .
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: Push Docker image
-        run: docker push ghcr.io/sergiog22/task-manager:${{ github.sha }}
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/arm64
+          push: true
+          tags: ghcr.io/sergiog22/task-manager:${{ github.sha }}
