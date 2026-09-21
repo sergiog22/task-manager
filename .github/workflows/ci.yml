@@ -26,4 +26,8 @@ jobs:
 
       - run: chmod +x mvnw
       - run: ./mvnw verify
-      - run: docker build --tag task-manager:${{ github.sha }} .
+      - name: Build Docker image
+        run: docker build --tag ghcr.io/sergiog22/task-manager:${{ github.sha }} .
+      
+      - name: Push Docker image
+        run: docker push ghcr.io/sergiog22/task-manager:${{ github.sha }}
