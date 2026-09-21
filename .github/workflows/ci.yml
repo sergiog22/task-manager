@@ -7,13 +7,23 @@ on:
 jobs:
   test-and-build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
           cache: maven
+
       - run: chmod +x mvnw
       - run: ./mvnw verify
       - run: docker build --tag task-manager:${{ github.sha }} .
