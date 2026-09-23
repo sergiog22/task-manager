@@ -1,8 +1,7 @@
 services:
   task-manager:
-    build: .
     container_name: task-manager
-    image: ghcr.io/sergiog22/task-manager:cdb64ab03bf0b818b8112c62c2f71b40e89df35f
+    image: ghcr.io/sergiog22/task-manager:latest
     ports:
       - "8080:8080"
     environment:

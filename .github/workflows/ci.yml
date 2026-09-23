@@ -1,20 +1,26 @@
 name: CI
 
+# Este workflow se ejecuta cada vez que hay un push o un pull request.
+# Su objetivo es validar la aplicación y publicar la imagen Docker en GHCR.
 on:
   push:
   pull_request:
 
+# Permisos mínimos necesarios para ejecutar el pipeline.
 permissions:
   contents: read
   packages: write
 
 jobs:
+  # Un solo job que compila, prueba y genera la imagen Docker.
   test-and-build:
     runs-on: ubuntu-latest
 
     steps:
+      # 1) Descarga el código del repositorio para trabajar con la última versión.
       - uses: actions/checkout@v4
 
+      # 2) Inicia sesión en GitHub Container Registry para poder publicar la imagen.
       - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
@@ -22,22 +28,32 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # 3) Configura Java 21 y habilita caché de dependencias Maven.
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '21'
+          java-version: "21"
           cache: maven
 
+      # 4) Da permisos de ejecución al wrapper de Maven.
       - run: chmod +x mvnw
+
+      # 5) Ejecuta la validación completa del proyecto con Maven.
+      #    Esto incluye compilar código y correr pruebas.
       - run: ./mvnw verify
 
+      # 6) Prepara Docker Buildx para construir imágenes multi-platform.
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # 7) Construye y publica la imagen Docker en GHCR.
+      #    Se empuja con el SHA actual y también con la etiqueta latest.
       - name: Build Docker image
         uses: docker/build-push-action@v6
         with:
           context: .
           platforms: linux/arm64
           push: true
-          tags: ghcr.io/sergiog22/task-manager:${{ github.sha }}
+          tags: |
+              ghcr.io/sergiog22/task-manager:${{ github.sha }}
+              ghcr.io/sergiog22/task-manager:latest
