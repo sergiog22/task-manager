@@ -57,3 +57,12 @@ jobs:
           tags: |
               ghcr.io/sergiog22/task-manager:${{ github.sha }}
               ghcr.io/sergiog22/task-manager:latest
+              
+      - name: Deploy to VM1
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: 160.34.219.68
+          username: ubuntu
+          key: ${{ secrets.VM_SSH_KEY }}
+          script: |
+            echo "Conexión SSH exitosa"
