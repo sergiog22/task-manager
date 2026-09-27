@@ -65,5 +65,6 @@ jobs:
           username: ubuntu
           key: ${{ secrets.VM_SSH_KEY }}
           script: |
-              cd ~/projects/task-manager
-              docker pull ghcr.io/sergiog22/task-manager:latest
+            cd ~/projects/task-manager
+            docker pull ghcr.io/sergiog22/task-manager:latest
+            docker compose up -d
